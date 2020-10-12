@@ -1,0 +1,126 @@
+<group name="ossec,">
+<rule id="100050" level="0">
+  <if_sid>530</if_sid>
+  <match>^ossec: output: 'ps -eo user,pid,cmd'</match>
+  <description>List of running process.</description>
+  <group>process_monitor,</group>
+</rule>
+
+<rule id="100051" level="7">
+  <if_sid>100050</if_sid>
+  <match>bash -i|perl -e|perl -MIO -e|php -r|ruby -rsocket|ssh -i|xterm -display|Xnest|xhost|nc -e|ncat -e|nc64.exe -e|nc32.exe -e|netcat -e|netcat.exe -e|nc.exe -e|python -c</match>
+  <description>Reverse shell listening for incoming connections.</description>
+  <group>process_monitor,attacks</group>
+</rule> 
+
+
+
+--------------------------------------------------------------------------------------------------
+
+    <group name= "ossec," >  
+      
+    <rule id= "100064"  level= "0" >  
+    <if_sid> 530 </if_sid>  
+    <match>^ossec: output:  'for /f "tokens=1" %a in ('tasklist /v') do @if %a==python.exe (wmic process where caption="%a" get commandline)  else if %a==ncat.exe (wmic process where caption="%a" get commandline) else if %a==nc64.exe (wmic process where caption="%a" get commandline) else if %a==ruby.exe (wmic process where caption="%a" get commandline) else if %a==php.exe (wmic process where caption="%a" get commandline) else if %a==perl.exe (wmic process where caption="%a" get commandline) else if %a==nc.exe (wmic process where caption="%a" get commandline)' </match>  
+    <description>List of running process..</description>  
+    <group>process_monitor,</group>  
+    </rule>  
+    <rule id= "100065"  level= "15" >  
+    <if_sid> 100064 </if_sid>  
+    <match>bash -i|dash -i|sh -i$|perl -e|perl -MIO -e|php -r|ruby -rsocket|xterm -display|Xnest |xhost |nc -e /bin/|lua -e require|python -c  import  socket|python -c  import  subprocess|python -c  import  os|python -c exec|nc -e cmd.exe|nc64.exe -e|nc32.exe -e|nc.exe -e|netcat -e|netcat.exe -e|ncat.exe -e|perl.exe -e|perl.exe -MIO -e|php.exe -r|ruby.exe -rsocket|python.exe -c  import  socket|python.exe -c  import  subprocess|python.exe -c  import  os|python.exe -c exec</match>  
+    <description>Reverse shell listening  for  incoming connections.</description>  
+    <group>process_monitor,attacks</group>  
+    </rule>  
+      
+    <rule id= "100066"  level= "7" >  
+    <if_sid> 530 </if_sid>  
+    <match>^ossec: output:  'netstat -anbtp tcp' </match>  
+    <description>List of listening tcp ports.</description>  
+    <group>process_monitor,</group>  
+    </rule>  
+    <rule id= "100067"  level= "12" >  
+    <if_sid> 100066 </if_sid>  
+    <match>/bash|/dash|/sh|nc|python.exe|py.exe|ncat.exe|nc.exe|nc64.exe|nc32.exe|ruby.exe|perl.exe|php.exe</match>  
+    <description>Find shell processes that have open sockets..</description>  
+    <group>process_monitor,attacks</group>  
+    </rule>  
+      
+    </group>  
+
+-------------------------------------------------------------------------------------------
+/var/ossec/etc/ossec.conf
+
+AGENT 
+
+    <ossec_config>  
+    <localfile>  
+    <log_format>command</log_format>  
+    <command>for /f "tokens=1" %a in ('tasklist /v') do @if %a==python.exe (wmic process where caption="%a" get commandline)  else if %a==ncat.exe (wmic process where caption="%a" get commandline) else if %a==nc64.exe (wmic process where caption="%a" get commandline) else if %a==ruby.exe (wmic process where caption="%a" get commandline) else if %a==php.exe (wmic process where caption="%a" get commandline) else if %a==perl.exe (wmic process where caption="%a" get commandline) else if %a==nc.exe (wmic process where caption="%a" get commandline)</command>  
+    <frequency> 60 </frequency>  
+    </localfile>  
+      
+    <localfile>  
+    <log_format>command</log_format>  
+    <command>netstat -anbtp tcp</command>  
+    <frequency> 60 </frequency>  
+    </localfile>  
+    </ossec_config>  
+
+
+
+
+
+netstat -abntp tcp
+for /f "tokens=1,2,8" %a in ('tasklist /v') do @echo %a %b %c
+wmic process where caption="python.exe" get commandline
+932
+
+
+for /f "tokens=1,2,8" %a in ('tasklist /v') do @if %a==ncat.exe wmic process where caption="%a" get commandline
+
+
+for /f "tokens=1,2,8" %a in ('netstat -abntp tcp') do @echo %a %b %c
+
+
+
+for /f "tokens=1" %a in ('tasklist /v') do @if %a==python.exe (wmic process where caption="%a" get commandline)  else if %a==ncat.exe (wmic process where caption="%a" get commandline) else if %a==nc64.exe (wmic process where caption="%a" get commandline) else if %a==ruby.exe (wmic process where caption="%a" get commandline) else if %a==php.exe (wmic process where caption="%a" get commandline) else if %a==perl.exe (wmic process where caption="%a" get commandline) else if %a==nc.exe (wmic process where caption="%a" get commandline)
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+<rule id= "100064"  level= "0" >
+    <if_sid> 530 </if_sid>
+    <match>^ossec: output:  'for /f "tokens=1" %a in ('tasklist /v') do @if %a==python.exe (wmic process where caption="%a" get commandline)  else if %a==ncat.exe (wmic process where caption="%a" get commandline) else if %a==nc64.exe (wmic process where caption="%a" get commandline) else if %a==ruby.exe (wmic process where caption="%a" get commandline) else if %a==php.exe (wmic process where caption="%a" get commandline) else if %a==perl.exe (wmic process where caption="%a" get commandline) else if %a==nc.exe (wmic process where caption="%a" get commandline)' </match>
+    <description>List of running process..</description>
+    <group>process_monitor,</group>
+</rule>
+<rule id= "100065"  level= "15" >
+    <if_sid> 100064 </if_sid>
+    <match>bash -i|dash -i|sh -i$|perl -e|perl -MIO -e|php -r|ruby -rsocket|xterm -display|Xnest |xhost |nc -e /bin/|lua -e require|python -c  import  socket|python -c  import  subprocess|python -c  import  os|python -c exec|nc -e cmd.exe|nc64.exe -e|nc32.exe -e|nc.exe -e|netcat -e|netcat.exe -e|ncat.exe -e|perl.exe -e|perl.exe -MIO -e|php.exe -r|ruby.exe -rsocket|python.exe -c  import  socket|python.exe -c  import  subprocess|python.exe -c  import  os|python.exe -c exec</match>
+    <description>Reverse shell listening  for  incoming connections.</description>
+    <group>process_monitor,attacks</group>
+</rule>
+<rule id= "100066"  level= "7" >
+    <if_sid> 530 </if_sid>
+    <match>^ossec: output:  'netstat -anbtp tcp' </match>
+    <description>List of listening tcp ports.</description>
+    <group>process_monitor,</group>
+</rule>
+<rule id= "100067"  level= "12" >
+    <if_sid> 100066 </if_sid>
+    <match>/bash|/dash|/sh|nc|python.exe|py.exe|ncat.exe|nc.exe|nc64.exe|nc32.exe|ruby.exe|perl.exe|php.exe</match>
+    <description>Find shell processes that have open sockets..</description>
+    <group>process_monitor,attacks</group>
+</rule>
+
+
+
+
